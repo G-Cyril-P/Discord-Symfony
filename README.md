@@ -1,7 +1,7 @@
 Guide d’installation et d’utilisation — Discord Clone (Symfony)
 Ce projet est un clone de Discord développé avec Symphony 8. Il permet de s’inscrire, De se connecter, de créer et de supprimer des salons textuels, ainsi que d’échanger des messages en temps réel au sein de ces salons.
 
-🛠️ 1. Prérequis
+1. Prérequis
 Avant de commencer, Assure-toi d’avoir installé sur ta machine :
 
 PHP (version 8.2 ou supérieure)
