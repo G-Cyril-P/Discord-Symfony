@@ -28,6 +28,10 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_channel_index');
+        }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -36,24 +40,34 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // encode the plain password
+            // Encodage du mot de passe
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setIsVerified(true);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('mailer@your-domain.com', 'name'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            // Tentative d'envoi d'email sans bloquer si aucun serveur SMTP n'est configuré
+            try {
+                $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                    (new TemplatedEmail())
+                        ->from(new Address('mailer@discord-clone.local', 'Discord Clone'))
+                        ->to((string) $user->getEmail())
+                        ->subject('Bienvenue sur Discord Clone')
+                        ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
+            } catch (\Throwable $e) {
+                // Silencieusement ignoré pour assurer un fonctionnement sans serveur mail
+            }
 
-            // do anything else you need here, like send an email
+            $this->addFlash('success', 'Votre compte a été créé avec succès !');
 
-            return $security->login($user, NameAuthenticator::class, 'main');
+            $loginResponse = $security->login($user, NameAuthenticator::class, 'main');
+            if ($loginResponse) {
+                return $loginResponse;
+            }
+
+            return $this->redirectToRoute('app_channel_index');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -76,7 +90,6 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
@@ -85,9 +98,8 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Votre adresse email a été vérifiée avec succès.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_channel_index');
     }
 }
