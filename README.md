@@ -1,8 +1,8 @@
 Guide d’installation et d’utilisation — Discord Clone (Symfony)
-Ce projet est un clone de Discord développé avec Symphony 8. Il permet de s’inscrire, De se connecter, de créer et de supprimer des salons textuels, ainsi que d’échanger des messages en temps réel au sein de ces salons.
+Ce projet est un clone de Discord développé avec Symfony 8. Il permet de s’inscrire, de se connecter, de créer et de supprimer des salons textuels, ainsi que d’échanger des messages en temps réel au sein de ces salons.
 
 1. Prérequis
-Avant de commencer, Assure-toi d’avoir installé sur ta machine :
+Avant de commencer, assure-toi d’avoir installé sur ta machine :
 
 PHP (version 8.2 ou supérieure)
 
@@ -25,10 +25,8 @@ Installer les dépendances PHP :
 Bash
 composer install
 Configurer la base de données :
-
-Duplique le fichier  ou crée un fichier  à la racine..env.env.local
-
-Modifie la ligne  pour y inscrire tes identifiants MySQL :DATABASE_URL
+Duplique le fichier  ou crée un fichier  à la racine.
+Modifie la ligne  pour y inscrire tes identifiants MySQL :.env.env.localDATABASE_URL
 
 Extrait de code
 DATABASE_URL="mysql://root:@127.0.0.1:3306/discord_clone?serverVersion=8.0.32&charset=utf8mb4"
@@ -37,7 +35,6 @@ Créer la base de données et lancer les migrations :
 Bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
-
 3. Lancer l’application
 Démarre le serveur local Symfony avec la commande suivante :
 
