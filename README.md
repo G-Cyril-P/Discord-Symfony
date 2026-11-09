@@ -12,7 +12,7 @@ Symfony CLI (recommandé) ou un serveur web local
 
 MySQL ou MariaDB (pour la base de données)
 
-⚙️ 2. Installation étape par étape
+2. Installation étape par étape
 Ouvre ton terminal et suis ces instructions :
 
 Cloner le dépôt GitHub :
@@ -37,7 +37,8 @@ Créer la base de données et lancer les migrations :
 Bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
-🚀 3. Lancer l’application
+
+3. Lancer l’application
 Démarre le serveur local Symfony avec la commande suivante :
 
 Bash
@@ -46,7 +47,7 @@ symfony server:start
 
 Ouvre ensuite ton navigateur à l’adresse indiquée (généralement ).[http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-💡 4. Utilisation
+4. Utilisation
 Inscription / Connexion :
 
 Lors du premier accès, crée un compte via la page d’inscription.
