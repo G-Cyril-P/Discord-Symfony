@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Channel : {{ channel.name }}{% endblock %}
+
+{% block body %}
+    <h1>Salon : {{ channel.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ channel.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Messages</h2>
+    {# Affichage des messages existants #}
+    <div class="messages-container" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 20px; background: #f9f9f9;">
+        {% for message in channel.messages %}
+            <div class="message" style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                <strong>{{ message.user.email }}</strong> 
+                <small class="text-muted" style="font-size: 0.8em; color: gray;">{{ message.createdAt|date('Y-m-d H:i') }}</small>
+                <p style="margin: 5px 0 0 0;">{{ message.content }}</p>
+            </div>
+        {% else %}
+            <p>Aucun message dans ce salon pour l'instant. Soyez le premier à écrire !</p>
+        {% endfor %}
+    </div>
+
+    {# Formulaire d'envoi de message #}
+    {{ form_start(form) }}
+        {{ form_row(form.content, {'label': 'Votre message'}) }}
+        <button class="btn btn-primary">Envoyer</button>
+    {{ form_end(form) }}
+
+    <hr style="margin: 20px 0;">
+
+    <div>
+        <a href="{{ path('app_channel_index') }}" class="btn btn-secondary">Back to list</a>
+        <a href="{{ path('app_channel_edit', {'id': channel.id}) }}" class="btn btn-warning">Edit</a>
+        {{ include('channel/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
